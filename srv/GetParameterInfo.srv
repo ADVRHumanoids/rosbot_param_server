@@ -1,0 +1,8 @@
+bool tunable_only
+string[] name
+---
+string[] value
+bool[] ok
+string[] type
+string[] descriptor
+string[] name
