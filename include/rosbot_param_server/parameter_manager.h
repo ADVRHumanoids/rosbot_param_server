@@ -12,7 +12,9 @@ public:
     typedef std::shared_ptr<ParameterBase> Ptr;
 
     ParameterBase(std::string name):
-        _name(name) {}
+        _name(name),
+        _min("-1"),
+        _max("1") {}
 
     std::string getName() const;
 
@@ -20,8 +22,15 @@ public:
 
     virtual void setValue(const YAML::Node v) = 0;
 
+    void setMax(const std::string max);
+    std::string getMax() const;
+
+    void setMin(const std::string min);
+    std::string getMin() const;
+
 private:
     std::string _name;
+    std::string _min, _max;
 };
 
 template <class T>
@@ -52,6 +61,7 @@ public:
 
 private:
     T _value;
+    T _min, _max;
     std::function<void(const T)> _cb;
 };
 
@@ -69,6 +79,13 @@ public:
         auto p = std::make_shared<Parameter<T>>(name, cb, initial_value);
         _parameter_map[name] = p;
     }
+
+    void setMax(std::string name, const std::string max);
+
+    void setMin(std::string name, const std::string min);
+
+    void setMinMax(std::string name, const std::string min, const std::string max);
+
 
 private:
     bool set_parameters(rosbot_param_server::SetStringRequest& req,

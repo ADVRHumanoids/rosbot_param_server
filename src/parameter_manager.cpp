@@ -1,6 +1,7 @@
 #include <rosbot_param_server/parameter_manager.h>
 
 
+
 ParameterManager::ParameterManager():
 _nh("horizon")
 {
@@ -11,6 +12,25 @@ _nh("horizon")
     _get_srv = _nh.advertiseService("get_parameter_info",
                                 &ParameterManager::get_parameters,
                                 this);
+}
+
+void ParameterManager::setMax(std::string name, const std::string max)
+{
+    auto p = _parameter_map[name];
+    p->setMax(max);
+}
+
+void ParameterManager::setMin(std::string name, const std::string min)
+{
+    auto p = _parameter_map[name];
+    p->setMin(min);
+}
+
+void ParameterManager::setMinMax(std::string name, const std::string min, const std::string max)
+{
+    auto p = _parameter_map[name];
+    p->setMin(min);
+    p->setMax(max);
 }
 
 
@@ -52,7 +72,7 @@ bool ParameterManager::get_parameters(rosbot_param_server::GetParameterInfoReque
         res.name.push_back(pair.first);
         res.value.push_back(pair.second->getValue());
         res.type.push_back("double");
-        res.descriptor.push_back("{type: InRange, min: 0, max: 500}");
+        res.descriptor.push_back("{type: InRange, min: " + pair.second->getMin() + ", max: " + pair.second->getMax() + "}");
     }
 
     return true;
@@ -61,5 +81,25 @@ bool ParameterManager::get_parameters(rosbot_param_server::GetParameterInfoReque
 std::string ParameterBase::getName() const
 {
     return _name;
+}
+
+void ParameterBase::setMax(const std::string max)
+{
+    _max = max;
+}
+
+void ParameterBase::setMin(const std::string min)
+{
+    _min = min;
+}
+
+std::string ParameterBase::getMin() const
+{
+    return _min;
+}
+
+std::string ParameterBase::getMax() const
+{
+    return _max;
 }
 

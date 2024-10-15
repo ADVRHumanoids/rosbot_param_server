@@ -65,8 +65,10 @@ PYBIND11_MODULE(rosbot_param_server_py, m)
 {
     py::class_<ParameterManager>(m, "ParameterManager")
         .def(py::init<>())
-        .def("createParameter", &ParameterManager::createParameter<double>) //, py::arg("name"), py::arg("cb"));
-        .def("createParameter", &ParameterManager::createParameter<std::vector<double>>); //, py::arg("name"), py::arg("cb"));
+        .def("createParameter", &ParameterManager::createParameter<double>)
+        .def("setMin", &ParameterManager::setMin)
+        .def("setMax", &ParameterManager::setMax)
+        .def("setMinMax", &ParameterManager::setMinMax);
 
     m.def("init", init);
     m.def("ros_update", ros_update);
